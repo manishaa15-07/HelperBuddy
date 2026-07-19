@@ -22,6 +22,7 @@ const ScrollToTop = () => {
         <AnimatePresence>
             {showScrollTop && (
                 <motion.button
+                    // @ts-expect-error: Type mismatch between Framer Motion and React
                     onClick={scrollToTop}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
