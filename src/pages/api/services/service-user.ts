@@ -1,4 +1,4 @@
-import Service_user from "../../../models/Service-user";
+import Service from "../../../models/Service";
 import connectDB from "@/lib/mongodb";
 
 export default async function handler(req: { method: string; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: any[]): any; new(): any; }; }; }) {
@@ -6,7 +6,7 @@ export default async function handler(req: { method: string; }, res: { status: (
 
     if (req.method === "GET") {
         try {
-            const services = await Service_user.find({});
+            const services = await Service.find({});
             return res.status(200).json(services); // Always return an array
         } catch (error) {
             console.error("Database error:", error);

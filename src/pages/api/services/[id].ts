@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import connectDB from "@/lib/mongodb"; // Ensure you have a utility to connect to MongoDB
-import Service_User from "../../../models/Service-user"; // Import your Mongoose model
+import Service from "../../../models/Service"; // Import your Mongoose model
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     await connectDB(); // Ensure database connection
@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        const product = await Service_User.findById(id);
+        const product = await Service.findById(id);
         if (!product) {
             return res.status(404).json({ error: "Product not found" });
         }
