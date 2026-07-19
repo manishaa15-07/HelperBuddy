@@ -4,10 +4,30 @@ import { FaUsers, FaCog, FaWallet, FaMoneyBill, FaBlog, FaMailBulk } from 'react
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
+    const [isLoading, setIsLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        // Don't check on login page
+        if (router.pathname === '/admin/login') {
+            setIsLoading(false);
+            return;
+        }
+
+        const token = localStorage.getItem('adminToken');
+        if (!token) {
+            router.push('/admin/login');
+        } else {
+            setIsLoading(false);
+        }
+    }, [router.pathname]);
 
     // Don't show sidebar on login page
     if (router.pathname === '/admin/login') {
         return <>{children}</>;
+    }
+
+    if (isLoading) {
+        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
     }
 
     const menuItems = [

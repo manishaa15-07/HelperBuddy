@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import connectDB from "@/lib/mongodb"
-import Booking from "@/models/comment"
+import Comment from "@/models/comment"
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,8 +23,8 @@ export default async function handler(
 // GET: Fetch all comments
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const bookings = await Booking.find()
-    return res.status(200).json({ success: true, bookings })
+    const comments = await Comment.find()
+    return res.status(200).json({ success: true, comments })
   } catch (error) {
     console.error("Error:", error)
     return res.status(500).json({
@@ -43,7 +43,7 @@ async function handleLike(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    const updatedComment = await Booking.findByIdAndUpdate(
+    const updatedComment = await Comment.findByIdAndUpdate(
       commentId,
       { $inc: { likes: 1 } }, // Increment likes by 1
       { new: true }
@@ -72,7 +72,7 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    const deletedComment = await Booking.findByIdAndDelete(commentId);
+    const deletedComment = await Comment.findByIdAndDelete(commentId);
 
     if (!deletedComment) {
       return res.status(404).json({ success: false, error: "Comment not found" });

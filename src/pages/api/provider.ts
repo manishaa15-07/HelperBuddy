@@ -96,6 +96,7 @@ export default async function handler(
         user_id: user_id || Date.now().toString(), // Temporary ID if not provided
         username: email.split("@")[0], // Default username
         email,
+        password: hashedPassword,
       },
     });
 
@@ -118,7 +119,4 @@ export default async function handler(
       error: error instanceof Error ? error.message : String(error),
     });
   }
-
-
-  return res.status(405).json({ success: false, message: "Method not allowed" });
 }

@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
-import { v4 as uuidv4 } from 'uuid'; // Add this import at the top
+import { generateToken } from "@/lib/authMiddleware";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -35,20 +35,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Generate a unique ID for the user
-    const userId = uuidv4();
-
-    // Create new user with the generated ID
+    // Create new user
     const user = await User.create({
-      _id: userId,
       name,
       email,
       phone,
       password: hashedPassword,
+      role: 'user',
       wallet: 0,
       referralCount: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
+    });
+
+    // Generate JWT token for auto-login after signup
+    const token = generateToken({
+      id: user._id.toString(),
+      email: user.email,
+      role: user.role || 'user',
     });
 
     // Remove password from response
@@ -60,6 +64,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(201).json({
       success: true,
       message: "User created successfully",
+      token,
       user: userResponse
     });
 

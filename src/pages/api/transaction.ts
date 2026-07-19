@@ -4,9 +4,14 @@ import connectDB from "@/lib/mongodb";
 import Transaction from "@/models/Transaction";
 import User from "@/models/User";
 import { NextApiRequest, NextApiResponse } from "next";
+import { requireAdmin } from "@/lib/authMiddleware";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await connectDB();
+
+  // All transaction operations require admin access
+  const admin = await requireAdmin(req, res);
+  if (!admin) return;
 
   if (req.method === "GET") {
     try {
